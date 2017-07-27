@@ -1,0 +1,30 @@
+{
+  "name": "beluga-challenge",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.16.2",
+    "csvtojson": "^1.1.7",
+    "express": "^4.15.3",
+    "express-ws": "^3.0.0",
+    "group-array": "^0.3.3",
+    "lodash.chunk": "^4.2.0",
+    "lodash.groupby": "^4.6.0",
+    "morgan": "^1.8.2",
+    "multer": "^1.3.0",
+    "react": "^15.6.1",
+    "react-bootstrap": "^0.31.1",
+    "react-dom": "^15.6.1",
+    "react-highcharts": "^12.0.0",
+    "react-scripts": "1.0.10",
+    "redis": "^2.7.1",
+    "redux-bootstrap": "^1.2.0",
+    "socket.io": "^2.0.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
