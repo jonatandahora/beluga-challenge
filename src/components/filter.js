@@ -1,5 +1,6 @@
 import React from "react";
 import { FormControl, Panel, Col, Button } from 'react-bootstrap';
+var _isEqual = require('lodash.isequal');
 
 export default class Filter extends React.Component {
 
@@ -22,22 +23,47 @@ export default class Filter extends React.Component {
       return []
     }
   }
+  componentWillReceiveProps(nextProps){
+    if (_isEqual(nextProps.filters, this.props.filters)) {
+      return
+    }
+
+    var filter = ''
+
+    if (nextProps.filters.date !== this.props.filters.date) {
+      filter = 'date'
+    } else {
+      filter = 'state'
+    }
+
+    var select = document.getElementsByName(`select_${filter}`)[0]
+    select.value = nextProps.filters[filter]
+
+    // simulating an event structure
+    var event = {
+      target: {
+        name: select.name,
+        value: nextProps.filters[filter]
+      }
+    }
+
+    this.filterDataset(event)
+  }
 
   mapFilterDates() {
     var dataset = this.props.dataset;
 
     if (dataset.length > 0) {
-    return dataset.filter((elem, i, a) =>
-        i === a.findIndex(elem2 => elem.date === elem2.date)
+      return dataset.filter((elem, i, a) =>
+          i === a.findIndex(elem2 => elem.date === elem2.date)
       ).map((elem) => elem.date)
-    }else{
+    } else{
       return []
     }
   }
 
   filterDataset(e){
-    var filtered = this.props.dataset
-    var filters = this.props.filters
+    var { dataset: filtered, filters }  = this.props
 
     if (filters.date === '' && filters.state === '' && e.target.value === '') {
       return this.props.onFilter(filtered, filters)
@@ -62,16 +88,12 @@ export default class Filter extends React.Component {
     var selects = document.getElementsByTagName('select')
     selects[0].selectedIndex = 0;
     selects[1].selectedIndex = 0;
-    var filters = {
-      date: '',
-      state: ''
-    }
-    return this.props.onFilter(this.props.dataset, filters)
+    return this.props.clearFilters()
   }
 
   render() {
     return <Panel>
-      <Col md={3} mdOffset={3}>
+      <Col md={3} mdOffset={2}>
         <FormControl onChange={this.filterDataset} componentClass="select"
                      placeholder="Select Date" name="select_date">
           <option value="">Select Date</option>
@@ -89,7 +111,7 @@ export default class Filter extends React.Component {
           )}
         </FormControl>
       </Col>
-      <Col md={3}>
+      <Col md={1}>
         <Button bsStyle="danger" onClick={this.clearFilters}>Clear Filters</Button>
       </Col>
     </Panel>;

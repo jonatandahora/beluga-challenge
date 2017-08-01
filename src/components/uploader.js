@@ -31,10 +31,10 @@ export default class Uploader extends React.Component {
     render() {
         return (
           <Panel>
-            <Col md={3} mdOffset={3}>
+            <Col md={3} mdOffset={4}>
               <FormControl id="hidden" onChange={this.changeFile} type="file" name="dataset"/>
             </Col>
-            <Col md={4} className="text-left">
+            <Col md={3} className="text-left">
               <Button bsStyle="primary" onClick={this.importFile}>Upload Data</Button>
             </Col>
           </Panel>
