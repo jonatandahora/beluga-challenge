@@ -5,12 +5,14 @@ import Filter from './components/filter'
 import Chart from './components/chart'
 import {Tabs, Tab, Grid, Row, Col} from 'react-bootstrap'
 var io = require('socket.io-client')
-const socket = io();
+const socket = io()
+var _isEqual = require('lodash.isequal')
 
 export default class App extends Component {
   constructor(props) {
-    super(props);
-    this.onFilter = this.onFilter.bind(this);
+    super(props)
+    this.onFilter = this.onFilter.bind(this)
+    this.clearFilters = this.clearFilters.bind(this)
     this.state = {
       dataset: [],
       datasetFiltered: [],
@@ -21,35 +23,46 @@ export default class App extends Component {
     }
   }
   componentDidMount() {
-    this.handleScoket();
+    this.handleScoket()
   }
 
   onUpload() {
-    socket.emit('dataset:load', {});
+    socket.emit('dataset:load', {})
   }
 
   onFilter(datasetFiltered, filters) {
     this.setState({
       datasetFiltered: datasetFiltered,
       filters: filters
-    });
-    socket.emit('filters:changed', filters);
+    })
+
+    socket.emit('filters:changed', filters)
+  }
+
+  clearFilters(){
+    var filters = {
+      date: '',
+      state: ''
+    }
+    this.setState({
+      datasetFiltered: this.state.dataset,
+      filters: filters
+    })
   }
 
   handleScoket() {
-    socket.emit('dataset:load', {});
+    socket.emit('dataset:load', {})
     socket.on('dataset:loaded', (dataset) => {
       this.setState({
         dataset: dataset,
         datasetFiltered: dataset,
-      });
-    });
-    socket.on('filters:updated', (filters) => {
-      // this should trigger a render with updated filters in all tabs and browsers
-      // but does not seen to work
-      // the socket does emit the updated filter to all clients though
-      this.setState({filters});
-    });
+      })
+    })
+    socket.on('filters:updated', (newFilters) => {
+      if (!_isEqual(this.state.filters, newFilters)) {
+        this.setState({filters: newFilters})
+      }
+    })
   }
 
   render() {
@@ -63,7 +76,7 @@ export default class App extends Component {
         <Col md={12}>
           <Filter filters={this.state.filters} datasetFiltered={this.state.datasetFiltered}
                   dataset={this.state.dataset}
-                  onFilter={this.onFilter}/>
+                  onFilter={this.onFilter} clearFilters={this.clearFilters}/>
         </Col>
       </Row>
       <Row>
