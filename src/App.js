@@ -30,13 +30,12 @@ export default class App extends Component {
     socket.emit('dataset:load', {})
   }
 
-  onFilter(datasetFiltered, filters) {
+  onFilter(datasetFiltered, newFilters) {
     this.setState({
-      datasetFiltered: datasetFiltered,
-      filters: filters
+      datasetFiltered: datasetFiltered
     })
 
-    socket.emit('filters:changed', filters)
+    socket.emit('filters:changed', newFilters)
   }
 
   clearFilters(){
@@ -59,9 +58,7 @@ export default class App extends Component {
       })
     })
     socket.on('filters:updated', (newFilters) => {
-      if (!_isEqual(this.state.filters, newFilters)) {
-        this.setState({filters: newFilters})
-      }
+      this.setState({filters: newFilters})
     })
   }
 

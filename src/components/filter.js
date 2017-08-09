@@ -1,6 +1,5 @@
 import React from "react";
 import { FormControl, Panel, Col, Button } from 'react-bootstrap';
-var _isEqual = require('lodash.isequal');
 
 export default class Filter extends React.Component {
 
@@ -24,9 +23,6 @@ export default class Filter extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps){
-    if (_isEqual(nextProps.filters, this.props.filters)) {
-      return
-    }
 
     var filter = ''
 

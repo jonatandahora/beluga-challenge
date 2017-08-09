@@ -1,8 +1,13 @@
 import { bootstrap } from 'redux-bootstrap';
 
-import { routes } from './routes.js';
+import { routes } from './routes';
+import { uploader } from './reducers/uploader';
+import { filter } from './reducers/filter';
 
 bootstrap({
-  reducers: {},
+  reducers: {
+    uploader,
+    filter
+  },
   routes
 });

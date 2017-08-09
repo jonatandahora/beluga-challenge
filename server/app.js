@@ -33,7 +33,7 @@ app.post('/upload', upload.single('dataset'), (req, res, next) => {
       return item;
     });
     redisClient.set('dataset', JSON.stringify(json))
-    res.send('ok')
+    res.send(json)
   })
 })
 
@@ -48,7 +48,17 @@ io.on('connection', (socket) => {
     });
   })
   socket.on('filters:changed', (filters) => {
-    io.emit('filters:updated', filters)
+    redisClient.get('filters', (err, reply) => {
+      if(reply != null){
+        let filterString = filters.toString()
+        if (reply != filterString) {
+          socket.broadcast.emit('filters:updated', filters)
+          redisClient.set('filters', JSON.stringify(filters))
+        }
+      } else{
+        redisClient.set('filters', JSON.stringify(filters))
+      }
+    });
   })
 });
 
